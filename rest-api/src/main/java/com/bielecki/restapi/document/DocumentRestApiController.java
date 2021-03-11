@@ -1,5 +1,6 @@
 package com.bielecki.restapi.document;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,10 +17,15 @@ public class DocumentRestApiController {
         return documents;
     }
 
-
     @PostMapping
     public void addDocument(@RequestBody Document document){ // { "title": "eoeo" }
         documents.add(document);
+    }
+
+    @PostMapping(value = "/{docNumber}/tags", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public void addTag(@PathVariable long docNumber, @RequestBody String tag){
+            documents.stream().filter(doc->doc.getNumber()==docNumber)
+                    .findAny().ifPresent(doc->doc.getTags().add(tag));
     }
 
 
