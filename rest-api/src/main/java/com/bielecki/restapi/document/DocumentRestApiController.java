@@ -26,6 +26,16 @@ public class DocumentRestApiController {
     public void addTag(@PathVariable long docNumber, @RequestBody String tag){
             documents.stream().filter(doc->doc.getNumber()==docNumber)
                     .findAny().ifPresent(doc->doc.getTags().add(tag));
+//            1:post http://localhost:8080/api/documents
+//        {
+//            "number":0,
+//                "title": "eoeo",
+//                "tags": ["ioio","fifo"]
+//        }
+//        2:
+//        post http://localhost:8080/api/documents/0/tags
+//            smth
+
     }
 
 
