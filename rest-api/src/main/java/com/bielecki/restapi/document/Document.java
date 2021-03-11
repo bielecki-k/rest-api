@@ -1,4 +1,4 @@
-package com.bielecki.restapi;
+package com.bielecki.restapi.document;
 
 public class Document {
 

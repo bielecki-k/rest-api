@@ -1,9 +1,8 @@
-package com.bielecki.restapi;
+package com.bielecki.restapi.document;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 @RestController
@@ -19,7 +18,7 @@ public class DocumentRestApiController {
 
 
     @PostMapping
-    public void addDocument(@RequestBody Document document){
+    public void addDocument(@RequestBody Document document){ // { "title": "eoeo" }
         documents.add(document);
     }
 
