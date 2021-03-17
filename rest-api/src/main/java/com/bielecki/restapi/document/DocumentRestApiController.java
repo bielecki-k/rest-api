@@ -13,6 +13,24 @@ public class DocumentRestApiController {
 
     private Collection<Document> documents = new ArrayList<>();
 
+    @PatchMapping("/{number}")
+    public void updateDocument(@PathVariable long number, @RequestBody Document  newPartialDocument) {
+        findDocumentByNumber(number).ifPresent(doc -> {
+            if (newPartialDocument.getTitle() != null)
+                doc.setTitle(newPartialDocument.getTitle());
+            if (newPartialDocument.getTags() != null)
+                doc.setTags(newPartialDocument.getTags());
+        });
+    }
+
+    @PutMapping("/{number}")
+    public void replaceDocument(@PathVariable long number, @RequestBody Document newDocument) {
+        findDocumentByNumber(number).ifPresent(document -> {
+            document.setTitle(newDocument.getTitle());
+            document.setTags(newDocument.getTags());
+        });
+    }
+
     @GetMapping
     public Iterable<Document> getDocuments(){
         return documents;
@@ -20,14 +38,12 @@ public class DocumentRestApiController {
 
     @GetMapping("/{number}")
     public Optional<Document> getDocument(@PathVariable long number){
-        return documents.stream()
-                .filter(doc->doc.getNumber()==number).findAny();
+        return findDocumentByNumber(number);
     }
 
     @GetMapping("/{number}/title")
     public Optional<String> getTitleOfDocument(@PathVariable long number){
-        return documents.stream()
-                .filter(doc->doc.getNumber()==number).findAny().map(Document::getTitle);
+        return findDocumentByNumber(number).map(Document::getTitle);
     }
 
     @PostMapping
@@ -36,9 +52,9 @@ public class DocumentRestApiController {
     }
 
     @PostMapping(value = "/{docNumber}/tags", consumes = MediaType.TEXT_PLAIN_VALUE)
-    public void addTag(@PathVariable long docNumber, @RequestBody String tag){
-            documents.stream().filter(doc->doc.getNumber()==docNumber)
-                    .findAny().ifPresent(doc->doc.getTags().add(tag));
+    public void addTag(@PathVariable long number, @RequestBody String tag){
+        findDocumentByNumber(number)
+                .ifPresent(doc->doc.getTags().add(tag));
 //            1:post http://localhost:8080/api/documents
 //        {
 //            "number":0,
@@ -49,6 +65,12 @@ public class DocumentRestApiController {
 //        post http://localhost:8080/api/documents/0/tags
 //            smth
 
+    }
+
+    private Optional<Document> findDocumentByNumber(long number) {
+        return documents.stream()
+                .filter(doc -> doc.getNumber() == number)
+                .findAny();
     }
 
 
