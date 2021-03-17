@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -13,8 +14,20 @@ public class DocumentRestApiController {
     private Collection<Document> documents = new ArrayList<>();
 
     @GetMapping
-    public Iterable<Document> getDocument(){
+    public Iterable<Document> getDocuments(){
         return documents;
+    }
+
+    @GetMapping("/{number}")
+    public Optional<Document> getDocument(@PathVariable long number){
+        return documents.stream()
+                .filter(doc->doc.getNumber()==number).findAny();
+    }
+
+    @GetMapping("/{number}/title")
+    public Optional<String> getTitleOfDocument(@PathVariable long number){
+        return documents.stream()
+                .filter(doc->doc.getNumber()==number).findAny().map(Document::getTitle);
     }
 
     @PostMapping
