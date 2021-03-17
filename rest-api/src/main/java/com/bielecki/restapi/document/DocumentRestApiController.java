@@ -13,6 +13,11 @@ public class DocumentRestApiController {
 
     private Collection<Document> documents = new ArrayList<>();
 
+    @DeleteMapping("/{id}")
+    public void deleteDocument(@PathVariable("id") long number){
+        documents.removeIf(doc -> doc.getNumber()==number);
+    }
+
     @PatchMapping("/{number}")
     public void updateDocument(@PathVariable long number, @RequestBody Document  newPartialDocument) {
         findDocumentByNumber(number).ifPresent(doc -> {
