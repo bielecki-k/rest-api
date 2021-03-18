@@ -1,4 +1,4 @@
-package com.bielecki.restapi.swamp;
+package com.bielecki.restapi.maturity.swamp;
 
 import com.bielecki.restapi.document.Document;
 import org.springframework.core.io.ClassPathResource;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/api/service")
+@RequestMapping("/api/maturity/service")
 public class AppService {
 
     private List<Document> documents = initDocuments();

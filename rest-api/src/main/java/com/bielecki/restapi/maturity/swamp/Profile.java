@@ -1,4 +1,4 @@
-package com.bielecki.restapi.swamp;
+package com.bielecki.restapi.maturity.swamp;
 
 import java.util.Objects;
 
