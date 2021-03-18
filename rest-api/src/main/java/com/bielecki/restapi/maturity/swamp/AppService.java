@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/api/maturity/service")
+@RequestMapping("/api/maturity/l0/service")
 public class AppService {
 
     private List<Document> documents = initDocuments();

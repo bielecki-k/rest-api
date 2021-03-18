@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/maturity/documents")
+@RestController("documentServiceL1")
+@RequestMapping("/api/maturity/l1/documents")
 public class DocumentService {
 
     private List<Document> documents = DataFixtureUtils.initDocuments();
