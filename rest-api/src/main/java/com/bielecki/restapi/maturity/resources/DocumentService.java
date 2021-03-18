@@ -1,6 +1,5 @@
 package com.bielecki.restapi.maturity.resources;
 
-
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.swamp.Command;
 import com.bielecki.restapi.maturity.uil.DataFixtureUtils;
@@ -15,8 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/maturity/documents")
 public class DocumentService {
-    private List<Document> documents =
-            DataFixtureUtils.initDocuments();
+
+    private List<Document> documents = DataFixtureUtils.initDocuments();
 
     @PostMapping
     public ResponseEntity<List<Document>> handle(@RequestBody Command command) {
