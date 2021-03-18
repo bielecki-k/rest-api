@@ -2,6 +2,8 @@ package com.bielecki.restapi.maturity.methods;
 
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.uil.DataFixtureUtils;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +15,19 @@ public class DocumentService {
     private List<Document> documents = DataFixtureUtils.initDocuments();
 
     @GetMapping
-    public List<Document> getAllDocuments(){
-        return documents;
+    public ResponseEntity<List<Document>> getAllDocuments(){
+        return ResponseEntity.ok().header("Cache-Control", "max-age"+"=3600").body(documents);
+    }
+
+    @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE )
+    public String getAllTitles(){
+        return documents.stream()
+                .map(Document::getTitle)
+                .reduce((acc,curr) -> (String.join(",",acc,curr)))
+                .orElse("");
+        //postman headers:
+        //Key       Value
+        //Accept    text/plain
     }
 
     @PostMapping
