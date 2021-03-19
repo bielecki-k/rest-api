@@ -3,12 +3,12 @@ package com.bielecki.restapi.maturity.hateoas;
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.util.DataFixtureUtils;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -20,6 +20,14 @@ public class DocumentService {
 
     private List<Document> documents = DataFixtureUtils.initDocuments();
 
+    @GetMapping
+    public Resources<Resource<Document>> getAllDocuments(){
+        Resources<Resource<Document>> resources = new Resources<>(documents.stream().map(this::mapToResource).collect(Collectors.toList()));
+        addDocsLink(resources,"self");
+        addFindDocsLink(resources,"docsByTitleAndNumber", null, null);
+        return resources;
+    }
+
     @GetMapping("/{number}")
     public Resource<Document> getDocument(@PathVariable("number") long number) {
         return documents.stream().filter(doc -> doc.getNumber() == number).findAny()
@@ -29,16 +37,21 @@ public class DocumentService {
     }
 
     @GetMapping(params = {"title","number"})
-    public ResponseEntity<List<Document>> getDocumentsByTitleAndNumber(@RequestParam("title") String title,
-                                                                       @RequestParam("number") long number){
+    public ResponseEntity<Resources<Resource<Document>>> getDocumentsByTitleAndNumber(@RequestParam("title") String title,
+                                                                                      @RequestParam("number") Long number){
+
+        Resources<Resource<Document>> resources = new Resources<>(documents.stream()
+                .filter(doc -> title.equals(doc.getTitle()) && number == doc.getNumber())
+                .map(this::mapToResource)
+                .collect(Collectors.toList()));
+        addDocsLink(resources,"allDocs");
+        addFindDocsLink(resources,"self",title,number);
 
         return ResponseEntity.ok()
                 .header("Cache-Control", "max-age"+"=3600")
-                .body(documents.stream()
-                        .filter(doc -> title.equals(doc.getTitle()) && number==doc.getNumber())
-                        .collect(Collectors.toList())
-                )
-                ;
+                .body(resources);
+
+
         //postman:
         //http://localhost:8080/api/maturity/l2/documents?title=doc1&number=0
 
@@ -74,6 +87,16 @@ public class DocumentService {
         docResource.add(linkTo(methodOn(DocumentService.class).getDocument(document.getNumber()))
                 .withSelfRel());
         return docResource;
+    }
+
+    private void addFindDocsLink(Resources<Resource<Document>> resources, String rel, String title, Long number) {
+        resources.add(linkTo(methodOn(DocumentService.class)
+                .getDocumentsByTitleAndNumber(title,number))
+                .withRel(rel));
+    }
+
+    private void addDocsLink(Resources<Resource<Document>> resources, String rel) {
+        resources.add(linkTo(DocumentService.class).withRel(rel));
     }
 
 }
