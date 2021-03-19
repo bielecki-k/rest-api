@@ -2,6 +2,7 @@ package com.bielecki.restapi.maturity.methods;
 
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.uil.DataFixtureUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ public class DocumentService {
                 ;
         //postman:
         //http://localhost:8080/api/maturity/l2/documents?title=doc1&number=0
+
     }
 
     @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE )
@@ -42,13 +44,17 @@ public class DocumentService {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void AddDocument(@RequestBody Document document){
+
         documents.add(document);
     }
 
     @DeleteMapping("/{number}")
-    public void deleteDocument(@PathVariable long number){
-        documents.removeIf(document -> document.getNumber() == number);
+    public ResponseEntity<Object> deleteDocument(@PathVariable long number) {
+        boolean anyElementRemoved = documents.removeIf(document -> document.getNumber() == number);
+        if (anyElementRemoved) return ResponseEntity.ok().build();
+        return ResponseEntity.notFound().build();
     }
 
 }
