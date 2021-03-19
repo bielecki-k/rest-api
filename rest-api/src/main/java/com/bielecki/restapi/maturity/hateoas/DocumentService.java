@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.print.Doc;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,11 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class DocumentService {
 
     private List<Document> documents = DataFixtureUtils.initDocuments();
+
+    @GetMapping(produces = "application/json")
+    public List<Document> getAllDocumentsWithoutLinks(){
+        return documents;
+    }
 
     @GetMapping
     public Resources<Resource<Document>> getAllDocuments(){
