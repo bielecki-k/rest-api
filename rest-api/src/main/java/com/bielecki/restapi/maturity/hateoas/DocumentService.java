@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.Doc;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,12 +18,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController("documentServiceL3")
-@RequestMapping("/api/maturity/l3/documents")
+@RequestMapping(value = "/api/maturity/l3/documents", produces = "application/cnd.bielecki.v2+hal+json")
 public class DocumentService {
 
     private List<Document> documents = DataFixtureUtils.initDocuments();
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = "application/vnd.bielecki.v1+json")
     public List<Document> getAllDocumentsWithoutLinks(){
         return documents;
     }
@@ -64,7 +65,7 @@ public class DocumentService {
 
     }
 
-    @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE )
+    @GetMapping(produces = "text/vnd.bielecki.v1+plain")
     public String getAllTitles(){
         return documents.stream()
                 .map(Document::getTitle)
@@ -77,7 +78,15 @@ public class DocumentService {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void AddDocument(@RequestBody Document document){
+    public ResponseEntity addDocumentv2(@RequestBody Document document){
+
+        documents.add(document);
+        return ResponseEntity.created(URI.create(mapToResource(document).getLink("self").getHref())).build();
+    }
+
+    @PostMapping(produces = "application/vnd.bielecki.v1+json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addDocument(@RequestBody Document document){
 
         documents.add(document);
     }
