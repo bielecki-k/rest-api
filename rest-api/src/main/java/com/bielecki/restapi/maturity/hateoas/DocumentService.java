@@ -3,14 +3,12 @@ package com.bielecki.restapi.maturity.hateoas;
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.util.DataFixtureUtils;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -25,12 +23,7 @@ public class DocumentService {
     @GetMapping("/{number}")
     public Resource<Document> getDocument(@PathVariable("number") long number) {
         return documents.stream().filter(doc -> doc.getNumber() == number).findAny()
-                .map(doc -> {
-                    Resource<Document> docResource = new Resource<>(doc);
-                    docResource.add(linkTo(methodOn(DocumentService.class).getDocument(number))
-                            .withSelfRel());
-                    return docResource;
-                }).orElse(null);
+                .map(this::mapToResource).orElse(null);
         //postman:
         //http://localhost:8080/api/maturity/l3/documents/{doc_number}
     }
@@ -74,6 +67,13 @@ public class DocumentService {
         boolean anyElementRemoved = documents.removeIf(document -> document.getNumber() == number);
         if (anyElementRemoved) return ResponseEntity.ok().build();
         return ResponseEntity.notFound().build();
+    }
+
+    private Resource<Document> mapToResource(Document document) {
+        Resource<Document> docResource = new Resource<>(document);
+        docResource.add(linkTo(methodOn(DocumentService.class).getDocument(document.getNumber()))
+                .withSelfRel());
+        return docResource;
     }
 
 }
