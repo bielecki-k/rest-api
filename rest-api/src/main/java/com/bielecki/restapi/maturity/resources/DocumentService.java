@@ -2,7 +2,7 @@ package com.bielecki.restapi.maturity.resources;
 
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.swamp.Command;
-import com.bielecki.restapi.maturity.uil.DataFixtureUtils;
+import com.bielecki.restapi.maturity.util.DataFixtureUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

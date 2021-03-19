@@ -1,4 +1,4 @@
-package com.bielecki.restapi.maturity.uil;
+package com.bielecki.restapi.maturity.util;
 
 import com.bielecki.restapi.document.Document;
 import com.bielecki.restapi.maturity.swamp.Profile;

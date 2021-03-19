@@ -1,7 +1,7 @@
 package com.bielecki.restapi.maturity.methods;
 
 import com.bielecki.restapi.document.Document;
-import com.bielecki.restapi.maturity.uil.DataFixtureUtils;
+import com.bielecki.restapi.maturity.util.DataFixtureUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
